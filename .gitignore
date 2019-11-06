@@ -7,6 +7,14 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+appconfig.json
+.metadata
+.recommenders
+.settings
+.project
+.classpath
+
+.appconfig.json
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
