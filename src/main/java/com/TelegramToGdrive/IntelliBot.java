@@ -9,7 +9,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,8 @@ public class IntelliBot extends TelegramLongPollingBot {
 
 		Map<String, String> UrlList = fileUrl.constructURl(listIds, this.configObj.getBotToken());
 
+		String folderName = generateUniqueFolder();
+		new File(folderName).mkdirs();
 		for (String listidentifiers : listIds) {
 
 			String fileRequestURl = UrlList.get(listidentifiers);
@@ -50,25 +54,28 @@ public class IntelliBot extends TelegramLongPollingBot {
 
 				try {
 					String fileName = fileRequestURl.substring(fileRequestURl.lastIndexOf('/')+1, fileRequestURl.length());
-					System.out.println("the file name is "+ fileName);
 					String extension = fileName.split("\\.")[1];
-					File outputfile = new File("uploadImages/"+fileName);
+					File outputfile = new File(folderName+fileName);
 					Image image = ImageIO.read(url);
 					BufferedImage bufferedImage = (BufferedImage) image;
 					ImageIO.write(bufferedImage, extension, outputfile);
-					System.out.println(image);
-					//ImageIO.write(image, extension, outputfile);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		UploadToDrive uploadToDrive = new UploadToDrive();
+		boolean isUploadingDone = uploadToDrive.uploadFolderToDrive(folderName);
+		
 	}
 
+	public String generateUniqueFolder() {
+		return "uploadImages/";
+		
+	}
 	public String getBotUsername() {
 		return this.configObj.getBotName();
 	}
